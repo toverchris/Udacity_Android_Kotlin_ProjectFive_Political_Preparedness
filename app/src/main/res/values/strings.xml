@@ -5,4 +5,8 @@
     <string name="find_my_representatives">find my representatives</string>
     <string name="content_description_ballot_logo">Logo for the upcoming ballot</string>
     <string name="saved_elections">Saved Elections</string>
+    <string name="button_search">Find my representatives</string>
+    <string name="button_location">Use my location</string>
+    <string name="representative_search">Representative Search</string>
+    <string name="my_representatives">My Representatives</string>
 </resources>
