@@ -1,58 +1,115 @@
 package com.example.android.politicalpreparedness.representative
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.view.*
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
 class DetailFragment : Fragment() {
 
+    private var userLocation : Location? = null
+
     companion object {
         //TODO: Add Constant for Location request
+        private const val REQUEST_FOREGROUND_PERMISSIONS_REQUEST_CODE = 34
     }
 
-    //TODO: Declare ViewModel
+    private val _viewModel: RepresentativeViewModel by viewModels()
+    private lateinit var binding: FragmentRepresentativeBinding
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        //TODO: Establish bindings
+        binding = DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_representative,
+                container,
+                false
+        )
+        binding.viewModel = _viewModel
+        binding.lifecycleOwner = this
 
         //TODO: Define and assign Representative adapter
 
         //TODO: Populate Representative adapter
 
         //TODO: Establish button listeners for field and location search
+        binding.buttonLocation.setOnClickListener {
+            if (checkLocationPermissions()) getLocation()
+        }
+        binding.buttonSearch.setOnClickListener { Log.i("Representatives", "Search in the web") }
 
+
+        return binding.root
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        //TODO: Handle location permission result to get location on permission granted
+        if(requestCode == REQUEST_FOREGROUND_PERMISSIONS_REQUEST_CODE) getLocation()
     }
 
     private fun checkLocationPermissions(): Boolean {
         return if (isPermissionGranted()) {
             true
         } else {
-            //TODO: Request Location permissions
+            ActivityCompat.requestPermissions(
+                    activity!!,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    1
+            )
             false
         }
     }
 
     private fun isPermissionGranted() : Boolean {
-        //TODO: Check if permission is already granted and return (true = granted, false = denied/other)
+        val foregroundLocationApproved = (
+                PackageManager.PERMISSION_GRANTED ==
+                        ActivityCompat.checkSelfPermission(context!!,
+                                Manifest.permission.ACCESS_FINE_LOCATION))
+        Log.i("representatives permis foreground", foregroundLocationApproved.toString())
+        return foregroundLocationApproved
     }
 
-    private fun getLocation() {
-        //TODO: Get location from LocationServices
-        //TODO: The geoCodeLocation method is a helper function to change the lat/long location to a human readable street address
+    private fun getLocation() = runBlocking {
+        try {
+            val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context!!) as FusedLocationProviderClient
+            val locationResult = fusedLocationProviderClient.lastLocation
+
+            locationResult.addOnCompleteListener{ task ->
+                if (task.isSuccessful) {
+                    userLocation = task.result
+                    if (userLocation != null) {
+                        Log.i("Repres", userLocation!!.latitude.toString())
+                        val address : Address  = geoCodeLocation(userLocation!!)
+                        //binding.addressLine1.text.insert(0,address.line1)
+                    }
+                } else {
+                    Toast.makeText(context, "Can not get your location. Please typ in manually", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+        }
     }
 
     private fun geoCodeLocation(location: Location): Address {
