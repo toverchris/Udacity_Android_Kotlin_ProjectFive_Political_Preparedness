@@ -29,7 +29,6 @@ class DetailFragment : Fragment() {
     private var userLocation : Location? = null
 
     companion object {
-        //TODO: Add Constant for Location request
         private const val REQUEST_FOREGROUND_PERMISSIONS_REQUEST_CODE = 34
     }
 
@@ -53,12 +52,14 @@ class DetailFragment : Fragment() {
 
         //TODO: Populate Representative adapter
 
-        //TODO: Establish button listeners for field and location search
+
         binding.buttonLocation.setOnClickListener {
             if (checkLocationPermissions()) getLocation()
         }
-        binding.buttonSearch.setOnClickListener { Log.i("Representatives", "Search in the web") }
-
+        binding.buttonSearch.setOnClickListener {
+            // TODO: 4/3/21 implement search the web when button is clicked
+            Log.i("Representatives", "Search in the web")
+        }
 
         return binding.root
     }
@@ -86,7 +87,6 @@ class DetailFragment : Fragment() {
                 PackageManager.PERMISSION_GRANTED ==
                         ActivityCompat.checkSelfPermission(context!!,
                                 Manifest.permission.ACCESS_FINE_LOCATION))
-        Log.i("representatives permis foreground", foregroundLocationApproved.toString())
         return foregroundLocationApproved
     }
 
@@ -99,9 +99,9 @@ class DetailFragment : Fragment() {
                 if (task.isSuccessful) {
                     userLocation = task.result
                     if (userLocation != null) {
-                        Log.i("Repres", userLocation!!.latitude.toString())
+                        hideKeyboard()
                         val address : Address  = geoCodeLocation(userLocation!!)
-                        //binding.addressLine1.text.insert(0,address.line1)
+                        updateInputFields(address)
                     }
                 } else {
                     Toast.makeText(context, "Can not get your location. Please typ in manually", Toast.LENGTH_SHORT).show()
@@ -110,6 +110,17 @@ class DetailFragment : Fragment() {
         }catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    private fun updateInputFields(address: Address){
+        binding.addressLine1.text.clear()
+        binding.addressLine1.text.insert(0,address.line1)
+        binding.addressLine2.text.clear()
+        binding.addressLine2.text.insert(0,address.line2)
+        binding.city.text.clear()
+        binding.city.text.insert(0, address.city)
+        binding.zip.text.clear()
+        binding.zip.text.insert(0, address.zip)
     }
 
     private fun geoCodeLocation(location: Location): Address {
