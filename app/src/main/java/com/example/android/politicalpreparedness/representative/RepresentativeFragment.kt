@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -22,11 +23,12 @@ import com.example.android.politicalpreparedness.network.models.Address
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.runBlocking
-import java.util.Locale
+import java.util.*
 
 class DetailFragment : Fragment() {
 
     private var userLocation : Location? = null
+    private lateinit var adapter : ArrayAdapter<CharSequence>
 
     companion object {
         private const val REQUEST_FOREGROUND_PERMISSIONS_REQUEST_CODE = 34
@@ -48,6 +50,8 @@ class DetailFragment : Fragment() {
         binding.viewModel = _viewModel
         binding.lifecycleOwner = this
 
+        initSpinner()
+
         //TODO: Define and assign Representative adapter
 
         //TODO: Populate Representative adapter
@@ -62,6 +66,27 @@ class DetailFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun initSpinner(){
+        val spinner = binding.state
+        adapter =  ArrayAdapter.createFromResource(context!!,R.array.states,android.R.layout.simple_spinner_item).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+        }
+    }
+
+    private fun updateSpinner(state: String){
+        val spinner = binding.state
+        val arrayList = resources.getStringArray(R.array.states)
+        val mutableArrayList = arrayList.toMutableList()
+        mutableArrayList.add(state)
+
+        adapter = ArrayAdapter(context!!,android.R.layout.simple_spinner_item, mutableArrayList.toTypedArray())
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+
+        spinner.setSelection(mutableArrayList.indexOf(state))
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -121,6 +146,7 @@ class DetailFragment : Fragment() {
         binding.city.text.insert(0, address.city)
         binding.zip.text.clear()
         binding.zip.text.insert(0, address.zip)
+        updateSpinner(address.state)
     }
 
     private fun geoCodeLocation(location: Location): Address {
