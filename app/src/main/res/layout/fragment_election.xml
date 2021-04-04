@@ -30,10 +30,11 @@
             android:id="@+id/recyclerView_upcomingElections"
             android:layout_width="0dp"
             android:layout_height="310dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_upcomingElections"
-            tools:itemCount="5"
+            tools:itemCount="20"
             app:spanCount="1"
             tools:listitem="@layout/list_view_item"
             app:listData= "@{viewModel.upcomingElectionsList}">
@@ -57,13 +58,14 @@
             android:id="@+id/recyclerView_savedElections"
             android:layout_width="0dp"
             android:layout_height="310dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_savedElections"
-            tools:itemCount="5"
+            tools:itemCount="20"
             app:spanCount="1"
-            tools:listitem="@layout/list_view_item"/>
-<!--            app:listData= "@{viewModel.savedElectionsList}"-->
+            tools:listitem="@layout/list_view_item"
+            app:listData= "@{viewModel.savedElectionsList}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
