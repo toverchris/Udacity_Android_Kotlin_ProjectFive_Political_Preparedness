@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.Division
@@ -39,7 +40,7 @@ class ElectionsViewModel: ViewModel() {
 
     init {
         getElectionsDataFromApi()
-        //defineFakeData()
+        getElectionsDataFromDatabase()
     }
 
     private fun getElectionsDataFromApi(){
@@ -62,22 +63,16 @@ class ElectionsViewModel: ViewModel() {
         }
     }
 
-    private fun defineFakeData(){
-        _upcomingElectionsList.value = listOf(
+    private fun getElectionsDataFromDatabase(){
+        _savedElectionsList.value = listOf(
                 Election(1, "VIP Test 1", Date(2022-1900,1,24), Division("123","Sagres","Portugal")),
                 Election(2, "Test 2", Date(2022-1900,2,24), Division("222","Tonel","Portugal")),
                 Election(3, "Test 3", Date(2022-1900,3,24), Division("333","Beliche","Portugal")),
                 Election(4, "Test 4", Date(2022-1900,4,24), Division("444","Mareta","Portugal") ),
-                Election(5, "Test 5", Date(2022-1900,5,24), Division("24442","Marthinal","Portugal")),
-                Election(6, "Test 6", Date(2022-1900,6,24), Division("35553","Zavial","Portugal") ),
-                Election(7, "Test 7", Date(2022-1900,7,24), Division("777","Beliche","Portugal")),
-                Election(8, "Test 8", Date(2022-1900,8,24), Division("8888","Mareta","Portugal") ),
-                Election(9, "Test 9", Date(2022-1900,9,24), Division("299992","Marthinal","Portugal"))
+                Election(5, "Test 5", Date(2022-1900,5,24), Division("24442","Marthinal","Portugal"))
                 )
-        _savedElectionsList.value = listOf()
     }
 
-    //TODO: Create functions to navigate to saved or upcoming election voter info
     fun displayElection(election: Election) {
         _navigateToSelectedElection.value = election
     }
