@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -26,84 +27,54 @@ import kotlinx.coroutines.InternalCoroutinesApi
 class ElectionsFragment: Fragment() {
 
     //TODO: Declare ViewModel
-    //private val _viewModel: ElectionsViewModel by viewModels()
-    @InternalCoroutinesApi
     private val _viewModel: ElectionsViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        //ViewModelProvider(this).get(ElectionsViewModel::class.java)
         ViewModelProviders.of(this, ElectionsViewModelFactory())
                 .get(ElectionsViewModel::class.java)
     }
 
-    //private lateinit var binding: FragmentElectionBinding
 
-    @InternalCoroutinesApi
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         //TODO: Add ViewModel values and create ViewModel
 
-
         //TODO: Add binding values
-        /*
-        binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_election,
-                container,
-                false)
-
-         */
         val binding = FragmentElectionBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewModel = _viewModel
 
 
+        //TODO: Initiate recycler adapters
         binding.recyclerViewUpcomingElections.adapter = ElectionListAdapter(ElectionListAdapter.ElectionListener{
-            Log.i("ElectionView", "new upcoming election name ${it.name}")
+            Log.i("ElectionFragment", "new upcoming election name ${it.name}")
             _viewModel.displayElection(it)
         })
 
         binding.recyclerViewSavedElections.adapter = ElectionListAdapter(ElectionListAdapter.ElectionListener{
-            Log.i("ElectionView", "new upcoming election name ${it.name}")
+            Log.i("ElectionFragment", "new saved election name ${it.name}")
             _viewModel.displayElection(it)
         })
 
-
-        /*
-        // TODO: 4/3/21 POINT TO START!! MAKE THE RECYCLERVIEW WORK
-        //_viewModel = ViewModelProvider(this, ElectionsViewModelFactory()).get(ElectionsViewModel::class.java)
-        binding.recyclerViewUpcomingElections.contentDescription = _viewModel.upcomingElectionsList.toString()
-
-        //TODO: Link elections to voter info
-        binding.recyclerViewUpcomingElections.setOnClickListener { navToVoterInfo() }
-        binding.recyclerViewSavedElections.setOnClickListener { navToVoterInfo() }
-
-        //TODO: Initiate recycler adapters
-        //binding.recyclerViewUpcomingElections.addView(binding.recyclerViewUpcomingElections)
-
-        binding.recyclerViewUpcomingElections.adapter = ElectionListAdapter(ElectionListAdapter.ElectionListener {
-            Log.i("Elections View", "new upcoming election name ${it.name}")
+        _viewModel.navigateToSelectedElection.observe(viewLifecycleOwner, Observer {
+            Log.i("ElectionsFragment", "observer triggered")
+            if ( null != it ) {
+                Log.i("ElectionsFragment", "navigate to election name ${it.name}")
+                navToVoterInfo()
+                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
+                _viewModel.displayElectionDetailsComplete()
+            } else {
+                Log.i("ElectionsFragment", "is null")
+            }
         })
-        binding.recyclerViewSavedElections.adapter = ElectionListAdapter(ElectionListAdapter.ElectionListener {
-            Log.i("Elections View", "new saved election name ${it.name}")
-        })
-        //TODO: Populate recycler adapters
-
-         */
-
-
 
         return binding.root
     }
 
     //TODO: Refresh adapters when fragment loads
 
-
     private fun navToVoterInfo() {
-        this.findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(1, Division("id string", "country string", "state string")))
+        this.findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(_viewModel.navigateToSelectedElection.value!!.id, _viewModel.navigateToSelectedElection.value!!.division ))
     }
 
 }
