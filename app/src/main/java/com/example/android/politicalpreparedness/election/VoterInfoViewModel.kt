@@ -54,7 +54,10 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
 
     fun getVoterInfoFromApi(division : Division, electionID : Int){
 
-        val address = "Michigan"
+        var address = "Michigan"
+        if(division.state.isNotEmpty()) {
+            address = division.state
+        }
 
         coroutineScope.launch {
             try {
