@@ -61,8 +61,8 @@ class DetailFragment : Fragment() {
             if (checkLocationPermissions()) getLocation()
         }
         binding.buttonSearch.setOnClickListener {
-            // TODO: 4/3/21 implement search the web when button is clicked
             Log.i("Representatives", "Search in the web")
+            _viewModel.getRepresentativesFromApi()
         }
 
         return binding.root

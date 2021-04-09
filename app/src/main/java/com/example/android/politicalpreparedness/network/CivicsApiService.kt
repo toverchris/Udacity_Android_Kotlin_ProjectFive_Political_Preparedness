@@ -72,7 +72,7 @@ interface CivicsApiService {
     ): Call<VoterInfoResponse>
 
     @GET("representatives")
-    fun getRepresentatives(): Call<RepresentativeResponse>
+    fun getRepresentatives(@Query("address") address : String): Call<RepresentativeResponse>
 }
 
 object CivicsApi {
