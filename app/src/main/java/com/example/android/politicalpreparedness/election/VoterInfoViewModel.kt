@@ -58,7 +58,7 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
             try {
                 var address : String
                 when(division.state){
-                    // TODO: 4/9/21 update this list if some state is not know (like ga for georgia) 
+                    // update this list if some state is not know (like ga for georgia or an empty string)
                     ""      -> address = "Michigan"
                     "ga"    -> address = "georgia"
                     else    -> address = division.state
