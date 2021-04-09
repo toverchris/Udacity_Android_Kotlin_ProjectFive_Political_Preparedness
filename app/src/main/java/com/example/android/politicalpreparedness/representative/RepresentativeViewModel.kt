@@ -51,11 +51,9 @@ class RepresentativeViewModel: ViewModel() {
 
      */
 
-    fun getRepresentativesFromApi(){
-
+    fun getRepresentativesFromApi(address : String){
         coroutineScope.launch {
             try {
-                val address = "georgia"
                 CivicsApi.retrofitService.getRepresentatives(address)
                         .enqueue(object : retrofit2.Callback<RepresentativeResponse> {
                             override fun onResponse(call: Call<RepresentativeResponse>, response: Response<RepresentativeResponse>) {
@@ -75,7 +73,13 @@ class RepresentativeViewModel: ViewModel() {
     }
 
     //TODO: Create function get address from geo location
+    fun getAddressFromGeoLocation(): String{
+        return "georgia"
+    }
 
     //TODO: Create function to get address from individual fields
+    fun getAddressFromIndividualFields(): String{
+        return "georgia"
+    }
 
 }

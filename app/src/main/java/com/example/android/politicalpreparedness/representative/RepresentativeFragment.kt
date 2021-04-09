@@ -58,11 +58,14 @@ class DetailFragment : Fragment() {
 
 
         binding.buttonLocation.setOnClickListener {
-            if (checkLocationPermissions()) getLocation()
+            if (checkLocationPermissions()){
+                getLocation()
+                _viewModel.getRepresentativesFromApi(_viewModel.getAddressFromGeoLocation())
+            }
         }
         binding.buttonSearch.setOnClickListener {
             Log.i("Representatives", "Search in the web")
-            _viewModel.getRepresentativesFromApi()
+            _viewModel.getRepresentativesFromApi(_viewModel.getAddressFromIndividualFields())
         }
 
         return binding.root
