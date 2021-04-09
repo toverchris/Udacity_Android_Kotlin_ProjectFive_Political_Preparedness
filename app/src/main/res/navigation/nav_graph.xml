@@ -30,8 +30,14 @@
         android:label="fragment_voter_info"
         tools:layout="@layout/fragment_voter_info">
         <argument
-            android:name="arg_election_id"
+            android:name="arg_electionId"
             app:argType="integer" />
+        <argument
+            android:name="arg_electionName"
+            app:argType="string" />
+        <argument
+            android:name="arg_electionDay"
+            app:argType="java.util.Date" />
         <argument
             android:name="arg_division"
             app:argType="com.example.android.politicalpreparedness.network.models.Division" />
