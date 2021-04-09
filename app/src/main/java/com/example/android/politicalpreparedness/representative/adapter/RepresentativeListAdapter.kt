@@ -1,3 +1,4 @@
+/*
 package com.example.android.politicalpreparedness.representative.adapter
 
 import android.content.Intent
@@ -11,14 +12,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.databinding.ListViewItemBinding
 import com.example.android.politicalpreparedness.databinding.ViewholderRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Channel
+import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.representative.model.Representative
 
 class RepresentativeListAdapter: ListAdapter<Representative, RepresentativeViewHolder>(RepresentativeDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepresentativeViewHolder {
-        return RepresentativeViewHolder.from(parent)
+        return  RepresentativeViewHolder(ListViewItemBinding.inflate(LayoutInflater.from(parent.context))) //RepresentativeViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: RepresentativeViewHolder, position: Int) {
@@ -79,5 +82,16 @@ class RepresentativeViewHolder(val binding: ViewholderRepresentativeBinding): Re
 }
 
 //TODO: Create RepresentativeDiffCallback
+class RepresentativeDiffCallback : DiffUtil.ItemCallback<Election>(){
+    override fun areItemsTheSame(oldItem: Election, newItem: Election): Boolean {
+        return oldItem === newItem
+    }
+    override fun areContentsTheSame(oldItem: Election, newItem: Election): Boolean {
+        return oldItem.id == newItem.id
+    }
+}
 
 //TODO: Create RepresentativeListener
+class RepresentativeListener(val clickListener: (representative:Representative)-> Unit){
+    fun onClick(representative:Representative)= clickListener(representative)
+}*/
