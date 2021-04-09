@@ -73,7 +73,7 @@ class ElectionsFragment: Fragment() {
     //TODO: Refresh adapters when fragment loads
 
     private fun navToVoterInfo() {
-        this.findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(_viewModel.navigateToSelectedElection.value!!.id,_viewModel.navigateToSelectedElection.value!!.name,_viewModel.navigateToSelectedElection.value!!.electionDay,_viewModel.navigateToSelectedElection.value!!.division ))
+        this.findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(_viewModel.navigateToSelectedElection.value!!.id,_viewModel.navigateToSelectedElection.value!!.division ))
     }
 
 }

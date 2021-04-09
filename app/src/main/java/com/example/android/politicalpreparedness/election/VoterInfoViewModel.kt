@@ -47,15 +47,18 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
         get() = _savedElectionsFromDatabase
 
     init {
-        getVoterInfoFromApi()
+        //getVoterInfoFromApi()
         populateSavedElectionsfromDatabase()
         populateUpcomingElectionsfromApi()
     }
 
-    private fun getVoterInfoFromApi(){
+    fun getVoterInfoFromApi(division : Division, electionID : Int){
+
+        val address = "Michigan"
+
         coroutineScope.launch {
             try {
-                CivicsApi.retrofitService.getVoterInfo("Michigan",2000)
+                CivicsApi.retrofitService.getVoterInfo(address,electionID)
                         .enqueue(object : retrofit2.Callback<VoterInfoResponse> {
                             override fun onResponse(call: Call<VoterInfoResponse>, response: Response<VoterInfoResponse>) {
                                 Log.i("Download Success", response.body().toString())

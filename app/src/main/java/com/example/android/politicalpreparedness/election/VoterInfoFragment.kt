@@ -53,10 +53,8 @@ class VoterInfoFragment : Fragment() {
         Hint: You will need to ensure proper data is provided from previous fragment.
         */
         val electionId = VoterInfoFragmentArgs.fromBundle(arguments!!).argElectionId
-        val electionName = VoterInfoFragmentArgs.fromBundle(arguments!!).argElectionName
-        val electionDay = VoterInfoFragmentArgs.fromBundle(arguments!!).argElectionDay
         val electionDivision = VoterInfoFragmentArgs.fromBundle(arguments!!).argDivision
-        _viewModel.populateVoterInfo(electionId,electionName,electionDay,electionDivision)
+        _viewModel.getVoterInfoFromApi(electionDivision,electionId)
 
         //TODO: Handle loading of URLs
 
