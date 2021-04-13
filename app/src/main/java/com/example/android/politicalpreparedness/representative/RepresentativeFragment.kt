@@ -16,13 +16,11 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
-import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
-import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.runBlocking
@@ -37,7 +35,7 @@ class DetailFragment : Fragment() {
         private const val REQUEST_FOREGROUND_PERMISSIONS_REQUEST_CODE = 34
     }
 
-    private val _viewModel: RepresentativeViewModel by viewModels()
+    private val _viewModel: RepresentativeViewModel by activityViewModels()//viewModels()
     private lateinit var binding: FragmentRepresentativeBinding
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -55,29 +53,33 @@ class DetailFragment : Fragment() {
 
         initSpinner()
 
+        //TODO: Define and assign Representative adapter
+        binding.recyclerViewRepresentatives.adapter = RepresentativeListAdapter()
+
         binding.buttonLocation.setOnClickListener {
             if (checkLocationPermissions()){
                 getLocation()
-                _viewModel.getRepresentativesFromApi(_viewModel.getAddressFromGeoLocation())
+                _viewModel.getRepresentativesFromApi(getAddressAsString())
             }
         }
 
         binding.buttonSearch.setOnClickListener {
-            Log.i("Representatives", "Search in the web")
-            _viewModel.getRepresentativesFromApi(_viewModel.getAddressFromIndividualFields())
+            hideKeyboard()
+            _viewModel.getRepresentativesFromApi(getAddressAsString())
         }
 
-        //TODO: Define and assign Representative adapter
-        binding.recyclerViewRepresentatives.adapter = RepresentativeListAdapter()
-            //Log.i("RepresentativesFragment", "new representative name ${it.office.name}")
-
-
-        //TODO: Populate Representative adapter
-
-
-
-
         return binding.root
+    }
+
+    private fun getAddressAsString(): String{
+        if(binding.state.selectedItem.toString().isNotEmpty()){
+            return binding.state.selectedItem.toString()
+        }else if(!binding.city.text.isNullOrEmpty()){
+            return binding.city.text.toString()
+        }else if(!binding.zip.text.isNullOrEmpty()){
+            return binding.zip.text.toString()
+        } else
+            return "denver"
     }
 
     private fun initSpinner(){
