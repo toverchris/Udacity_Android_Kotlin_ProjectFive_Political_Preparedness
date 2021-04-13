@@ -13,7 +13,15 @@
     <!-- TODO: Add motion scene to hide form on vertical scroll. -->
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/motionLayout"
+        app:layoutDescription="@xml/motion_scene"
+        tools:showPaths="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/representative_search_fields">
 
         <TextView
             android:id="@+id/search_title"
@@ -26,7 +34,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- TODO: Add data binding value -->
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/address_line_1"
@@ -39,7 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_title" />
 
-        <!-- TODO: Add data binding value -->
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/address_line_2"
@@ -51,7 +57,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/address_line_1" />
 
-        <!-- TODO: Add data binding value -->
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/city"
@@ -78,7 +83,6 @@
             app:layout_constraintStart_toEndOf="@id/city"
             app:layout_constraintTop_toTopOf="@id/city" />
 
-        <!-- TODO: Add data binding value -->
         <!-- TODO: Add visual styling and content -->
         <EditText
             android:id="@+id/zip"
@@ -108,7 +112,17 @@
             android:text="@string/button_location"
             app:layout_constraintTop_toBottomOf="@id/button_search" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <!-- TODO: Add visual styling and content -->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/representative_recyclerview"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/representative_search_fields">
+
         <TextView
             android:id="@+id/representative_title"
             android:layout_width="wrap_content"
@@ -116,34 +130,23 @@
             android:text="@string/my_representatives"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_location" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="20sp" />
 
-        <!-- TODO: Add Representatives RecyclerView -->
         <!-- TODO: Add visual styling and content -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_representatives"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintStart_toStartOf="@id/representative_title"
+            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/representative_title"
-            tools:listitem="@layout/representative_list_view_item"
-            app:listData= "@{viewModel.representativesList}">
+            app:listData="@{viewModel.representativesList}"
+            tools:listitem="@layout/representative_list_view_item">
         </androidx.recyclerview.widget.RecyclerView>
 
-    <!--    <TextView
-            android:id="@+id/list_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/representative_title"
-            motion:visibilityMode="ignore" />-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>
