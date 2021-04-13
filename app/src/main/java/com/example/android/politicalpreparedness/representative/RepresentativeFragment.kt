@@ -19,7 +19,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
+import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.runBlocking
@@ -52,21 +55,27 @@ class DetailFragment : Fragment() {
 
         initSpinner()
 
-        //TODO: Define and assign Representative adapter
-
-        //TODO: Populate Representative adapter
-
-
         binding.buttonLocation.setOnClickListener {
             if (checkLocationPermissions()){
                 getLocation()
                 _viewModel.getRepresentativesFromApi(_viewModel.getAddressFromGeoLocation())
             }
         }
+
         binding.buttonSearch.setOnClickListener {
             Log.i("Representatives", "Search in the web")
             _viewModel.getRepresentativesFromApi(_viewModel.getAddressFromIndividualFields())
         }
+
+        //TODO: Define and assign Representative adapter
+        binding.recyclerViewRepresentatives.adapter = RepresentativeListAdapter()
+            //Log.i("RepresentativesFragment", "new representative name ${it.office.name}")
+
+
+        //TODO: Populate Representative adapter
+
+
+
 
         return binding.root
     }
@@ -106,6 +115,7 @@ class DetailFragment : Fragment() {
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     1
             )
+            getLocation()
             false
         }
     }

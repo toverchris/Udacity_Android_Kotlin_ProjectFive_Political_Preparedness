@@ -125,8 +125,8 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="@id/representative_title"
             app:layout_constraintTop_toBottomOf="@id/representative_title"
-            tools:listitem="@layout/representative_list_view_item">
-<!--            app:stateValue= "@{viewModel.representativesList}"-->
+            tools:listitem="@layout/representative_list_view_item"
+            app:listData= "@{viewModel.representativesList}">
         </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
