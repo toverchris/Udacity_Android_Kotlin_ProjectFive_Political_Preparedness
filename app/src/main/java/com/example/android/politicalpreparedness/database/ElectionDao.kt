@@ -7,7 +7,7 @@ import com.example.android.politicalpreparedness.network.models.Election
 @Dao
 interface ElectionDao {
 
-    @Query("SELECT * FROM election_table")
+    @Query("Select * from election_table order by electionDay")
     fun getElectionsFromDatabase(): LiveData<List<Election>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -19,6 +19,7 @@ interface ElectionDao {
     @Delete
     fun delete(election: Election)
 
-    //TODO: Add clear query
+    @Query("Delete from election_table")
+    fun clear()
 
 }
