@@ -37,12 +37,6 @@ class VoterInfoFragment : Fragment() {
             val activity = requireNotNull(this.activity) {
                 "You can only access the viewModel after onActivityCreated()"
             }
-            /*
-            val dataSource : ElectionDao = requireNotNull(){
-                "You can only access the viewModel after a database is created"
-            }
-
-             */
             ViewModelProviders.of(this, VoterInfoViewModelFactory(activity.application))
                     .get(VoterInfoViewModel::class.java)
         }
