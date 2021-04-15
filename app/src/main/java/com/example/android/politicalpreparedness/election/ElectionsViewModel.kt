@@ -11,7 +11,7 @@ import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.Division
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.ElectionResponse
-import com.example.android.politicalpreparedness.repository.ElectionRepository
+//import com.example.android.politicalpreparedness.repository.ElectionRepository
 import kotlinx.coroutines.*
 import okhttp3.Callback
 import okhttp3.Dispatcher
@@ -44,7 +44,7 @@ class ElectionsViewModel(application: Application): ViewModel() {
 
     @InternalCoroutinesApi
     private val database = ElectionDatabase.getInstance(application.applicationContext)
-    private val electionRepository = ElectionRepository(database)
+    //private val electionRepository = ElectionRepository(database)
 
     init {
 
