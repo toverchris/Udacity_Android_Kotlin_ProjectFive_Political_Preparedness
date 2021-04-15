@@ -33,6 +33,8 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
         get() = _voterInfo
 
     //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
+    @InternalCoroutinesApi
+    private val database = ElectionDatabase.getInstance(application.applicationContext)
 
     private  val _upcomingElectionsFromApi = MutableLiveData<List<Election>>()
     val upcomingElectionsFromApi: LiveData<List<Election>>
@@ -100,12 +102,14 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
         }
     }
 
+    @InternalCoroutinesApi
     fun saveToDatabase(){
-        _savedElectionsFromDatabase.value!!.plus(_voterInfo.value)
+        voterInfo.value?.let { database.electionDao.insert(it.election) }
         Log.i("saved to database", _savedElectionsFromDatabase.value.toString())
     }
+    @InternalCoroutinesApi
     fun removeFromDatabase(){
-        _savedElectionsFromDatabase.value!!.minus(_voterInfo)
+        voterInfo.value?.let { database.electionDao.delete(it.election) }
         Log.i("removed from database", _savedElectionsFromDatabase.value.toString())
     }
 

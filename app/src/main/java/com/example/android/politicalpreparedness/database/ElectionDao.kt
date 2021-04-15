@@ -17,6 +17,8 @@ interface ElectionDao {
     fun insertAll(elections: List<Election>)
 
     //TODO: Add delete query
+    @Delete
+    fun delete(election: Election)
 
     //TODO: Add clear query
 

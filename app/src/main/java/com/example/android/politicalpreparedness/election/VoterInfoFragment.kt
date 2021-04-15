@@ -24,6 +24,7 @@ import kotlin.math.absoluteValue
 
 class VoterInfoFragment : Fragment() {
 
+    @InternalCoroutinesApi
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -60,9 +61,16 @@ class VoterInfoFragment : Fragment() {
 
         //TODO: Handle save button UI state
         binding.buttonFollowElection.setOnClickListener {
-            _viewModel.saveToDatabase()
-            //findNavController().navigateUp()
-            button_followElection.text = _viewModel.updateButtonText(button_followElection.text.toString())
+            if(button_followElection.text == "Follow election"){
+                _viewModel.saveToDatabase()
+                //findNavController().navigateUp()
+                button_followElection.text = _viewModel.updateButtonText(button_followElection.text.toString())
+            }else{
+                _viewModel.removeFromDatabase()
+                button_followElection.text = _viewModel.updateButtonText(button_followElection.text.toString())
+            }
+
+
         }
 
         //TODO: cont'd Handle save button clicks
