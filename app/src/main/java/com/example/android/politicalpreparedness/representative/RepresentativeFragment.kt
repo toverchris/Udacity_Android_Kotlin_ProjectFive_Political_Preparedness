@@ -23,6 +23,7 @@ import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.synthetic.main.fragment_representative.*
 import kotlinx.coroutines.runBlocking
 import java.util.*
 
@@ -30,6 +31,7 @@ class DetailFragment : Fragment() {
 
     private var userLocation : Location? = null
     private lateinit var adapter : ArrayAdapter<CharSequence>
+    private var storedAddress : Address? = null
 
     companion object {
         private const val REQUEST_FOREGROUND_PERMISSIONS_REQUEST_CODE = 34
@@ -48,6 +50,7 @@ class DetailFragment : Fragment() {
                 container,
                 false
         )
+
         binding.viewModel = _viewModel
         binding.lifecycleOwner = this
 
@@ -55,6 +58,16 @@ class DetailFragment : Fragment() {
 
         //TODO: Define and assign Representative adapter
         binding.recyclerViewRepresentatives.adapter = RepresentativeListAdapter()
+
+        if (savedInstanceState != null) {
+            storedAddress = Address(
+                    savedInstanceState.getString("addressLine1").toString(),
+                    savedInstanceState.getString("addressLine2").toString(),
+                    savedInstanceState.getString("city").toString(),
+                    savedInstanceState.getString("state").toString(),
+                    savedInstanceState.getString("zip").toString()
+            )
+        }
 
         binding.buttonLocation.setOnClickListener {
             if (checkLocationPermissions()){
@@ -69,6 +82,21 @@ class DetailFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("addressLine1", binding.addressLine1.text.toString())
+        outState.putString("addressLine2", binding.addressLine2.text.toString())
+        outState.putString("city", binding.city.text.toString())
+        outState.putString("zip", binding.zip.text.toString())
+        outState.putString("state", binding.state.selectedItem.toString())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        storedAddress?.let { updateInputFields(it) }
+
     }
 
     private fun getAddressAsString(): String{
