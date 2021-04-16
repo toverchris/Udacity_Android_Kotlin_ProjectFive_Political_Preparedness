@@ -95,8 +95,10 @@ class DetailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        storedAddress?.let { updateInputFields(it) }
-
+        storedAddress?.let {
+            updateInputFields(it)
+            storedAddress = null
+        }
     }
 
     private fun getAddressAsString(): String{
@@ -169,7 +171,10 @@ class DetailFragment : Fragment() {
                     if (userLocation != null) {
                         hideKeyboard()
                         val address : Address  = geoCodeLocation(userLocation!!)
+                        Log.i("representatives Address", address.toString())
                         updateInputFields(address)
+                    }else {
+                        Toast.makeText(context, "Can not get your location. Using default location", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(context, "Can not get your location. Please typ in manually", Toast.LENGTH_SHORT).show()

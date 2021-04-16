@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.politicalpreparedness.network.CivicsApi
-import com.example.android.politicalpreparedness.network.models.Address
-import com.example.android.politicalpreparedness.network.models.Division
-import com.example.android.politicalpreparedness.network.models.RepresentativeResponse
-import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+import com.example.android.politicalpreparedness.network.models.*
 import com.example.android.politicalpreparedness.representative.model.Representative
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
+import java.util.*
 
 class RepresentativeViewModel: ViewModel() {
 
@@ -32,15 +30,18 @@ class RepresentativeViewModel: ViewModel() {
         get() = _address
 
     fun getRepresentativesFromApi(address : String){
+        Log.i("Download Address", address.toString())
         coroutineScope.launch {
             try {
                 CivicsApi.retrofitService.getRepresentatives(address)
                         .enqueue(object : retrofit2.Callback<RepresentativeResponse> {
                             override fun onResponse(call: Call<RepresentativeResponse>, response: Response<RepresentativeResponse>) {
-                                Log.i("Download Success", response.body().toString())
                                 if(response.body()!=null){
+                                    Log.i("Download Success", response.body().toString())
                                     val (offices, officials) = response.body()!!
                                     _representativesList.value = offices.flatMap { office -> office.getRepresentatives(officials) }
+                                }else{
+                                    Log.e("RepresentativesDataFromApi", "Add your personal API key in the CivicsHttpClient class")
                                 }
                             }
                             override fun onFailure(call: Call<RepresentativeResponse>, t: Throwable) {

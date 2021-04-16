@@ -67,8 +67,12 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
                 CivicsApi.retrofitService.getVoterInfo(address, electionID)
                         .enqueue(object : retrofit2.Callback<VoterInfoResponse> {
                             override fun onResponse(call: Call<VoterInfoResponse>, response: Response<VoterInfoResponse>) {
-                                Log.i("Download Success", response.body().toString())
-                                _voterInfo.value = response.body()!!
+                                if(response.body()!=null){
+                                    Log.i("Download Success", response.body().toString())
+                                    _voterInfo.value = response.body()!!
+                                } else{
+                                    Log.e("RepresentativesDataFromApi", "Add your personal API key in the CivicsHttpClient class")
+                                }
                             }
 
                             override fun onFailure(call: Call<VoterInfoResponse>, t: Throwable) {
