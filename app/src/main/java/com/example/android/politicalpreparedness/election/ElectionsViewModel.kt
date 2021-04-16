@@ -68,12 +68,10 @@ class ElectionsViewModel(application: Application): ViewModel() {
                                     Log.e("ElectionsDataFromApi", "Add your personal API key in the CivicsHttpClient class")
                                     _upcomingElectionsList.value = listOf(Election(0,"Add your personal API key in the CivicsHttpClient class",Date(), Division("","","")))
                                 }
-
                             }
                             override fun onFailure(call: Call<ElectionResponse>, t: Throwable) {
                                 Log.i("Download Failure", t.message.toString())
                             }
-
                         })
             }catch (e: Exception) {
                 Log.i("Download Failure", e.message.toString())
@@ -101,9 +99,9 @@ class ElectionsViewModel(application: Application): ViewModel() {
      */
 
     fun getElectionsDataFromDatabase(){
-        val electionList : LiveData<List<Election>> = database.electionDao.getElectionsFromDatabase()
-        Log.i("Database electionList", electionList.value.toString())
-        _savedElectionsList.value = electionList.value
+        val electionList : List<Election> = database.electionDao.getElectionsFromDatabase()
+        Log.i("Database electionList", electionList.toString())
+        _savedElectionsList.value = electionList
     }
 
     fun displayElection(election: Election) {
