@@ -86,5 +86,6 @@ class ElectionsFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         _viewModel.getElectionsDataFromDatabase()
+        _viewModel.hideUpcomingElectionsIfSavedInDatabase()
     }
 }

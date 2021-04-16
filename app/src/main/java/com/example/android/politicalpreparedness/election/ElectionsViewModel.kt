@@ -33,6 +33,10 @@ class ElectionsViewModel(application: Application): ViewModel() {
     val upcomingElectionsList: LiveData<List<Election>>
         get() = _upcomingElectionsList
 
+    private  val _upcomingElectionsListSource = MutableLiveData<List<Election>>()
+    val upcomingElectionsListSource: LiveData<List<Election>>
+        get() = _upcomingElectionsListSource
+
     private  val _savedElectionsList = MutableLiveData<List<Election>>()
     val savedElectionsList: LiveData<List<Election>>
         get() = _savedElectionsList
@@ -41,20 +45,24 @@ class ElectionsViewModel(application: Application): ViewModel() {
     val navigateToSelectedElection: LiveData<Election>
         get() = _navigateToSelectedElection
 
-
     @InternalCoroutinesApi
     private val database = ElectionDatabase.getInstance(application.applicationContext)
-    //private val electionRepository = ElectionRepository(database)
 
     init {
-
         getElectionsDataFromApi()
-
         viewModelScope.launch {
             getElectionsDataFromDatabase()
-            //electionRepository.refreshElections()
+            hideUpcomingElectionsIfSavedInDatabase()
         }
     }
+
+    fun hideUpcomingElectionsIfSavedInDatabase(){
+        if(!savedElectionsList.value.isNullOrEmpty() && !upcomingElectionsListSource.value.isNullOrEmpty()){
+            _upcomingElectionsList.value = _upcomingElectionsListSource.value
+            _upcomingElectionsList.value = _upcomingElectionsList.value!!.minus(savedElectionsList.value!!)
+        }
+    }
+
     private fun getElectionsDataFromApi(){
         coroutineScope.launch {
             try {
@@ -64,6 +72,7 @@ class ElectionsViewModel(application: Application): ViewModel() {
                                 if(response.body()!=null){
                                     Log.i("Download Success", response.body().toString())
                                     _upcomingElectionsList.value = response.body()!!.elections
+                                    _upcomingElectionsListSource.value = _upcomingElectionsList.value
                                 }else{
                                     Log.e("ElectionsDataFromApi", "Add your personal API key in the CivicsHttpClient class")
                                     _upcomingElectionsList.value = listOf(Election(0,"Add your personal API key in the CivicsHttpClient class",Date(), Division("","","")))
@@ -78,25 +87,6 @@ class ElectionsViewModel(application: Application): ViewModel() {
             }
         }
     }
-
-    /*
-    private fun saveElectionsToDatabase(){
-        val elections = listOf(
-                Election(1, "VIP Test 1", Date(2022-1900,1,24), Division("123","Sagres","Portugal")),
-                Election(2, "Test 2", Date(2022-1900,2,24), Division("222","Tonel","Portugal")),
-                Election(3, "Test 3", Date(2022-1900,3,24), Division("333","Beliche","Portugal")),
-                Election(4, "Test 4", Date(2022-1900,4,24), Division("444","Mareta","Portugal") ),
-                Election(5, "Test 5", Date(2022-1900,5,24), Division("24442","Marthinal","Portugal"))
-        )
-        database.electionDao.insertAll(elections)
-    }
-
-    private fun saveElectionToDatabase(){
-        val election = Election(1, "First Database object", Date(2022-1900,1,24), Division("123","Sagres","Portugal"))
-        database.electionDao.insert(election)
-    }
-
-     */
 
     fun getElectionsDataFromDatabase(){
         val electionList : List<Election> = database.electionDao.getElectionsFromDatabase()
