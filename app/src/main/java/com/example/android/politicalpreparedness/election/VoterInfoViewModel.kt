@@ -1,5 +1,6 @@
 package com.example.android.politicalpreparedness.election
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -22,8 +23,10 @@ import retrofit2.Response
 import java.util.*
 
 
+@InternalCoroutinesApi
 class VoterInfoViewModel(application: Application) : ViewModel() {
 
+    @SuppressLint("StaticFieldLeak")
     private val context = application.applicationContext
 
     //TODO: Add live data to hold voter info
@@ -88,8 +91,9 @@ class VoterInfoViewModel(application: Application) : ViewModel() {
     private fun populateUpcomingElectionsfromApi() {
     }
 
+    @InternalCoroutinesApi
     private fun populateSavedElectionsfromDatabase() {
-        //_savedElectionsFromDatabase.value = listOf(Election(88888, "VIP Test 999", Date(2022 - 1900, 1, 24), Division("123", "Sagres", "Portugal")))
+        _savedElectionsFromDatabase.value = database.electionDao.getElectionsFromDatabase()
     }
 
     //TODO: Add var and methods to populate voter info

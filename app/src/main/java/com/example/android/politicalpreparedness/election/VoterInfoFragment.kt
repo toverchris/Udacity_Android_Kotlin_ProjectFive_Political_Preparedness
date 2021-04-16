@@ -62,6 +62,11 @@ class VoterInfoFragment : Fragment() {
             val ballotURL = _viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.ballotInfoUrl
             if (ballotURL.isNullOrEmpty()) binding.stateBallot.visibility = View.INVISIBLE
             else binding.stateBallot.visibility = View.VISIBLE
+
+            if(_viewModel.savedElectionsFromDatabase.value!!.contains(it.election)){
+                binding.buttonFollowElection.text = _viewModel.updateButtonText("Follow election")
+            }
+
         }
 
         //TODO: Handle save button UI state
